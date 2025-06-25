@@ -1,0 +1,2 @@
+# policygeneratror
+Generate OPA policy
