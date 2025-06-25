@@ -1,0 +1,28 @@
+control,rego
+Access to production systems must be restricted to users with the 'prod-admin' role and must require MFA.,"package authz
+
+default allow = false
+
+allow {
+    input.resource == ""production_system""
+    input.user.role == ""prod-admin""
+    input.user.mfa == true
+}"
+Only service accounts in namespace ‘payments’ can deploy to production.,"package deploy
+
+default allow = false
+
+allow {
+    input.namespace == ""payments""
+    input.user.type == ""service_account""
+    input.environment == ""production""
+}"
+External users should only have read-only access to S3 buckets.,"package s3
+
+default allow = false
+
+allow {
+    input.user.type == ""external""
+    input.access_level == ""read-only""
+    input.resource == ""s3_bucket""
+}"
